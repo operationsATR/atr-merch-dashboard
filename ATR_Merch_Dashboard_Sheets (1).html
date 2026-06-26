@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATR Merch & Shirts Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root {
+  --teal:#4B929B; --teal-lt:#D6ECEE; --teal-dk:#3d7a82;
+  --green:#AACD61; --green-lt:#EEF6D9; --green-dk:#5a8c1a;
+  --melon:#E0694A; --melon-lt:#FAE0D9;
+  --yellow:#F6CD61; --yellow-lt:#FEF8DC;
+  --purple:#4B618C; --purple-lt:#DDE1EF;
+  --bg:#f7f7f5; --surface:#fff; --surface2:#f1f0ec;
+  --border:rgba(0,0,0,0.10); --border2:rgba(0,0,0,0.18);
+  --text:#1a1a18; --text2:#5f5e5a; --text3:#9a998f;
+  --r-md:8px; --r-lg:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+.app{max-width:1040px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem}
+.logo{width:44px;height:44px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0}
+.header h1{font-size:22px;font-weight:600;letter-spacing:-0.3px}
+.header p{font-size:13px;color:var(--text2);margin-top:1px}
+.atrbadge{margin-left:auto;background:var(--green);color:#2d4a10;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+
+.tabs{display:flex;gap:2px;margin-bottom:1.5rem;background:var(--surface2);border-radius:var(--r-lg);padding:4px;flex-wrap:wrap}
+.tab{font-size:13px;font-weight:500;padding:7px 14px;border:none;background:none;cursor:pointer;color:var(--text2);border-radius:var(--r-md);transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.tab i{font-size:15px}
+.tab.active{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tab.active.t-teal{color:var(--teal)}
+.tab.active.t-green{color:var(--green-dk)}
+.tab.active.t-purple{color:var(--purple)}
+.tab.active.t-vol{color:#2a7a3a}
+.tab.active.t-yellow{color:#7a5c0a}
+.tab.active.t-count{color:#6b4a1a}
+.tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,.5)}
+
+.section{display:none}.section.active{display:block}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:1.25rem}
+.stat{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:14px 16px}
+.stat .sl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat .sv{font-size:24px;font-weight:600;line-height:1}
+.stat .ss{font-size:11px;color:var(--text3);margin-top:3px}
+
+.controls{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.controls input,.controls select,.addrow input,.addrow select,
+.count-form input,.count-form select,.count-form textarea{
+  font-size:13px;padding:7px 11px;border:0.5px solid var(--border2);
+  border-radius:var(--r-md);background:var(--surface);color:var(--text);outline:none;
+  font-family:inherit}
+.controls input:focus,.controls select:focus,.addrow input:focus,.addrow select:focus,
+.count-form input:focus,.count-form select:focus,.count-form textarea:focus{border-color:var(--teal)}
+.controls input{min-width:180px;flex:1}
+
+.btn{font-size:13px;font-weight:500;padding:7px 16px;border:none;border-radius:var(--r-md);cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal-dk)}
+.btn-green{background:var(--green);color:#2d4a10}.btn-green:hover{opacity:.88}
+.btn-outline{background:var(--surface);color:var(--text2);border:0.5px solid var(--border2)}.btn-outline:hover{background:var(--surface2);color:var(--text)}
+
+.ibtn{background:none;border:none;cursor:pointer;color:var(--text3);padding:3px 5px;border-radius:5px;font-size:15px;line-height:1}
+.ibtn:hover{background:var(--surface2);color:var(--text)}
+
+.twrap{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;padding:10px 14px;border-bottom:0.5px solid var(--border);text-align:left;background:var(--surface2);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafaf8}
+
+.badge{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:500}
+.b-apparel{background:#dff0f3;color:#1a5f68}
+.b-accessories{background:#eaf3de;color:#2d5c0e}
+.b-home{background:#fae9e4;color:#7a3015}
+.b-dept{background:var(--purple-lt);color:#3b2e72}
+.size-pill{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--surface2);color:var(--text2);font-weight:500}
+.qty-low{color:var(--melon);font-weight:600}
+
+.chkbtn{background:none;border:none;cursor:pointer;font-size:20px;padding:2px;line-height:1}
+.chk-yes{color:var(--teal)}.chk-no{color:var(--text3)}
+
+.addrow{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap;align-items:center}
+.addrow input{min-width:120px}
+
+.qbar{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+.qbar label{font-size:13px;color:var(--text2)}
+
+/* ── INVENTORY COUNT TAB ── */
+/* shirt size count rows */
+.shirt-size-section{margin-top:12px}
+.shirt-size-section h4{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:5px;border-bottom:0.5px solid var(--border)}
+.size-count-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px}
+.size-count-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;background:var(--surface2);border-radius:var(--r-md)}
+.size-count-item .size-lbl{font-size:11px;font-weight:600;color:var(--text2)}
+.size-count-item .size-cur{font-size:10px;color:var(--text3)}
+.size-count-item input{width:56px;font-size:13px;padding:4px 6px;border:0.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);text-align:center}
+.size-count-item input:focus{border-color:var(--teal);outline:none}
+
+.count-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start}
+@media(max-width:680px){.count-layout{grid-template-columns:1fr}}
+
+.count-form-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:1.25rem}
+.count-form-card h3{font-size:15px;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:7px;color:var(--text)}
+.count-form{display:flex;flex-direction:column;gap:10px}
+.count-form label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:3px;display:block}
+.count-form input,.count-form select{width:100%}
+.count-form textarea{width:100%;resize:vertical;min-height:60px;line-height:1.5}
+.item-counts{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.item-count-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface2);border-radius:var(--r-md)}
+.item-count-row .iname{flex:1;font-size:13px;font-weight:500;color:var(--text)}
+.item-count-row .icurrent{font-size:11px;color:var(--text3)}
+.item-count-row input[type=number]{width:72px;font-size:13px;padding:5px 8px;border:0.5px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--text);text-align:center}
+.item-count-row input[type=number]:focus{border-color:var(--teal);outline:none}
+
+.count-log-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.count-log-card h3{font-size:15px;font-weight:600;padding:1rem 1.25rem;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:7px}
+.count-entry{padding:1rem 1.25rem;border-bottom:0.5px solid var(--border)}
+.count-entry:last-child{border-bottom:none}
+.count-entry-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.count-entry-meta{font-size:13px;font-weight:600;color:var(--text)}
+.count-entry-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.count-entry-notes{font-size:12px;color:var(--text2);font-style:italic;margin-bottom:8px}
+.count-snapshot{display:flex;flex-wrap:wrap;gap:6px}
+.snap-item{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--teal-lt);color:var(--teal-dk, #1a5f68);font-weight:500}
+.snap-item.changed-up{background:#eaf3de;color:#2d5c0e}
+.snap-item.changed-down{background:var(--melon-lt);color:#7a2a10}
+.count-empty{padding:2rem;text-align:center;color:var(--text3);font-size:13px}
+.quarter-badge{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600;background:var(--yellow-lt);color:#7a5c0a}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--r-lg);padding:1.75rem;width:min(480px,92vw);box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:1.25rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:12px;color:var(--text2);font-weight:500}
+.form-group input,.form-group select{font-size:13px;padding:7px 11px;border:0.5px solid var(--border2);border-radius:var(--r-md);background:var(--surface);color:var(--text);outline:none}
+.form-group input:focus,.form-group select:focus{border-color:var(--teal)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:1.5rem}
+
+.hint{font-size:12px;color:var(--text3);margin-top:1rem;padding:10px 14px;background:var(--yellow-lt);border:0.5px solid var(--yellow);border-radius:var(--r-md);display:flex;align-items:center;gap:7px}
+.margin-wrap{width:70px;height:5px;background:var(--surface2);border-radius:3px;display:inline-block;vertical-align:middle}
+.margin-bar{height:5px;border-radius:3px;background:var(--teal)}
+.profit-pos{color:#1a7a3a;font-weight:600}
+.profit-neg{color:var(--melon);font-weight:600}
+.totrow td{font-weight:600;background:var(--surface2);border-top:0.5px solid var(--border2)!important}
+
+@media(max-width:640px){.app{padding:1rem 1rem 4rem}.tabs{width:100%}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:1}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <div class="logo"><i class="ti ti-dog"></i></div>
+  <div>
+    <h1>Merch &amp; Shirts</h1>
+    <p>Almost There Rescue — Canine Corner + Staff + Volunteers</p>
+  </div>
+  <span class="atrbadge">ATR</span>
+</div>
+
+<!-- ── SYNC STATUS BAR ── -->
+<div id="sync-bar" style="display:flex;align-items:center;gap:8px;background:#fff;border:0.5px solid rgba(0,0,0,0.10);border-radius:8px;padding:8px 14px;margin-bottom:1.25rem;font-size:12px;">
+  <span id="sync-dot" style="width:8px;height:8px;border-radius:50%;background:#9a998f;flex-shrink:0;display:inline-block;"></span>
+  <span id="sync-txt" style="color:#5f5e5a;flex:1;">Initializing…</span>
+  <span id="sync-spin" style="display:none;color:#4B929B;">⟳</span>
+  <button onclick="manualSync()" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid rgba(0,0,0,0.15);background:none;cursor:pointer;color:#5f5e5a;white-space:nowrap;">↻ Refresh</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active t-teal"   onclick="switchTab('merch',this)"><i class="ti ti-shopping-bag"></i>Canine Corner</button>
+  <button class="tab t-count"         onclick="switchTab('count',this)"><i class="ti ti-clipboard-check"></i>Inventory counts</button>
+  <button class="tab t-purple"        onclick="switchTab('staff',this)"><i class="ti ti-shirt"></i>Staff shirts</button>
+  <button class="tab t-vol"           onclick="switchTab('vol',this)"><i class="ti ti-heart-handshake"></i>Volunteer shirts</button>
+  <button class="tab t-yellow"        onclick="switchTab('lead',this)"><i class="ti ti-report-money"></i>Financials</button>
+</div>
+
+<!-- ═══ MERCH ═══ -->
+<div id="tab-merch" class="section active">
+  <div class="stats" id="merch-stats"></div>
+  <div class="controls">
+    <input type="text" id="merch-search" placeholder="Search items…" oninput="renderMerch()">
+    <select id="merch-cat" onchange="renderMerch()">
+      <option value="">All categories</option>
+      <option value="Apparel">Apparel</option>
+      <option value="Accessories">Accessories</option>
+      <option value="Home">Home &amp; lifestyle</option>
+    </select>
+    <button class="btn btn-teal" onclick="openAddMerch()"><i class="ti ti-plus"></i> Add item</button>
+    <button class="btn btn-outline" id="merch-edit-btn" onclick="toggleMerchEdit()" style="margin-left:auto;"><i class="ti ti-pencil"></i> Edit prices &amp; thresholds</button>
+  </div>
+  <div id="merch-edit-banner" style="display:none;background:var(--yellow-lt);border:0.5px solid var(--yellow);border-radius:var(--r-md);padding:9px 14px;margin-bottom:10px;font-size:12px;align-items:center;gap:10px;">
+    <i class="ti ti-pencil" style="color:#7a5c0a;font-size:15px;"></i>
+    <span style="color:#5a3e00;flex:1;">Edit mode — prices and low-stock thresholds are now editable. Click <strong>Save &amp; Lock</strong> when done.</span>
+    <button class="btn btn-green" onclick="saveMerchEdits()"><i class="ti ti-device-floppy"></i> Save &amp; Lock</button>
+    <button class="btn btn-outline" onclick="cancelMerchEdit()" style="font-size:12px;">Cancel</button>
+  </div>
+  <div class="twrap">
+    <table>
+      <thead><tr>
+        <th>Item</th><th>Category</th><th>SKU / Size</th>
+        <th>Retail price</th><th>Qty in stock</th><th>Sold</th><th>Low alert</th><th></th>
+      </tr></thead>
+      <tbody id="merch-body"></tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text3);margin-top:10px"><i class="ti ti-alert-circle" style="vertical-align:-2px;margin-right:3px"></i>Items at or below their threshold highlight in orange. Add new items to the spreadsheet too so they save across computers.</p>
+</div>
+
+<!-- ═══ INVENTORY COUNTS ═══ -->
+<div id="tab-count" class="section">
+  <div class="stats" id="count-stats"></div>
+  <div class="count-layout">
+
+    <!-- Left: count form -->
+    <div class="count-form-card">
+      <h3><i class="ti ti-clipboard-list" style="color:var(--teal)"></i>Log a new count</h3>
+      <div class="count-form">
+        <div>
+          <label>Date of count</label>
+          <input type="date" id="cnt-date">
+        </div>
+        <div>
+          <label>Quarter</label>
+          <select id="cnt-quarter">
+            <option>Q1 2025</option><option>Q2 2025</option><option>Q3 2025</option><option>Q4 2025</option>
+            <option>Q1 2026</option><option selected>Q2 2026</option><option>Q3 2026</option><option>Q4 2026</option>
+          </select>
+        </div>
+        <div>
+          <label>Conducted by</label>
+          <input type="text" id="cnt-who" placeholder="Your name">
+        </div>
+        <div>
+          <label>Item counts</label>
+          <div class="item-counts" id="count-items"></div>
+        </div>
+
+        <div class="shirt-size-section">
+          <h4><i class="ti ti-shirt" style="vertical-align:-2px;margin-right:4px"></i>Staff shirts by size</h4>
+          <div class="size-count-grid" id="cnt-staff-sizes"></div>
+        </div>
+        <div class="shirt-size-section">
+          <h4><i class="ti ti-heart-handshake" style="vertical-align:-2px;margin-right:4px"></i>Volunteer shirts by size</h4>
+          <div class="size-count-grid" id="cnt-vol-sizes"></div>
+        </div>
+        <div>
+          <label>Notes</label>
+          <textarea id="cnt-notes" placeholder="Any discrepancies, reorders placed, etc."></textarea>
+        </div>
+        <button class="btn btn-green" onclick="saveCount()" style="margin-top:4px"><i class="ti ti-device-floppy"></i> Save count</button>
+      </div>
+    </div>
+
+    <!-- Right: count log -->
+    <div class="count-log-card">
+      <h3><i class="ti ti-history" style="color:#6b4a1a"></i>Count history</h3>
+      <div id="count-log"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ STAFF SHIRTS ═══ -->
+<div id="tab-staff" class="section">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap;">
+    <div>
+      <label style="font-size:13px;color:var(--text2);margin-right:6px;">Quarter:</label>
+      <select id="staff-quarter" onchange="renderStaff()">
+        <option>Q1 2025</option><option>Q2 2025</option><option>Q3 2025</option><option>Q4 2025</option>
+        <option>Q1 2026</option><option selected>Q2 2026</option>
+      </select>
+    </div>
+    <button class="btn btn-outline" id="staff-size-edit-btn" onclick="toggleStaffSizeEdit()" style="margin-left:auto;"><i class="ti ti-pencil"></i> Edit size inventory</button>
+  </div>
+
+  <!-- Size inventory panel -->
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;"><i class="ti ti-shirt" style="color:var(--teal);"></i> Staff shirt inventory by size</div>
+      <div id="staff-size-save-row" style="display:none;gap:8px;display:none;">
+        <button class="btn btn-green" onclick="saveStaffSizeEdits()"><i class="ti ti-device-floppy"></i> Save & Lock</button>
+        <button class="btn btn-outline" onclick="cancelStaffSizeEdit()" style="font-size:12px;">Cancel</button>
+      </div>
+    </div>
+    <div id="staff-size-grid" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;"><i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:3px;"></i>Counts decrease automatically when a shirt is marked received. Highlighted in orange when at or below 2.</div>
+  </div>
+
+  <div class="stats" id="staff-stats"></div>
+
+  <!-- Allotment alert -->
+  <div id="staff-allotment-banner" style="display:none;background:#fcebeb;border:0.5px solid #f5c4c4;border-radius:var(--r-md);padding:9px 14px;margin-bottom:10px;font-size:12px;color:#a32d2d;"></div>
+
+  <div class="twrap">
+    <table>
+      <thead><tr>
+        <th>Employee</th><th>Department</th><th>Size</th>
+        <th style="text-align:center;">Shirts this quarter</th>
+        <th style="text-align:center;">Received</th>
+        <th>Date received</th><th>Status</th><th></th>
+      </tr></thead>
+      <tbody id="staff-body"></tbody>
+    </table>
+  </div>
+  <div class="addrow" style="margin-top:1rem;">
+    <input type="text" id="s-name" placeholder="Employee name">
+    <input type="text" id="s-dept" placeholder="Department">
+    <select id="s-size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>2XL</option><option>3XL</option></select>
+    <button class="btn btn-teal" onclick="addStaff()"><i class="ti ti-plus"></i> Add</button>
+  </div>
+</div>
+
+<!-- ═══ VOLUNTEER SHIRTS ═══ -->
+<div id="tab-vol" class="section">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap;">
+    <div style="font-size:13px;font-weight:500;color:var(--text2);">All volunteer shirt distributions — volunteers pay $${SHIRT_RETAIL} per shirt.</div>
+    <button class="btn btn-outline" id="vol-size-edit-btn" onclick="toggleVolSizeEdit()" style="margin-left:auto;"><i class="ti ti-pencil"></i> Edit size inventory</button>
+  </div>
+
+  <!-- Size inventory panel -->
+  <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;"><i class="ti ti-heart-handshake" style="color:#2a7a3a;"></i> Volunteer shirt inventory by size</div>
+      <div id="vol-size-save-row" style="display:none;gap:8px;">
+        <button class="btn btn-green" onclick="saveVolSizeEdits()"><i class="ti ti-device-floppy"></i> Save & Lock</button>
+        <button class="btn btn-outline" onclick="cancelVolSizeEdit()" style="font-size:12px;">Cancel</button>
+      </div>
+    </div>
+    <div id="vol-size-grid" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;"><i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:3px;"></i>Counts decrease when a volunteer is marked received. All volunteer shirts are paid — payment flagged in the log below.</div>
+  </div>
+
+  <div class="stats" id="vol-stats"></div>
+  <div class="twrap">
+    <table>
+      <thead><tr><th>Volunteer name</th><th>Size</th><th style="text-align:center">Received / Paid</th><th>Date</th><th>Notes</th><th></th></tr></thead>
+      <tbody id="vol-body"></tbody>
+    </table>
+  </div>
+  <div class="addrow">
+    <input type="text" id="v-name" placeholder="Volunteer name" style="min-width:180px">
+    <select id="v-size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>2XL</option><option>3XL</option></select>
+    <input type="text" id="v-notes" placeholder="Notes (optional)" style="min-width:160px">
+    <button class="btn btn-teal" onclick="addVol()"><i class="ti ti-plus"></i> Add</button>
+  </div>
+</div>
+
+<!-- ═══ FINANCIALS ═══ -->
+<div id="tab-lead" class="section">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap;">
+    <div class="hint" style="margin-bottom:0;flex:1;"><i class="ti ti-lock" style="color:#b8900a;font-size:15px"></i>Financial view — cost, revenue, and profit per item.</div>
+    <button class="btn btn-outline" id="lead-edit-btn" onclick="toggleLeadEdit()"><i class="ti ti-pencil"></i> Edit prices</button>
+  </div>
+  <div id="lead-edit-banner" style="display:none;background:var(--yellow-lt);border:0.5px solid var(--yellow);border-radius:var(--r-md);padding:9px 14px;margin-bottom:10px;font-size:12px;align-items:center;gap:10px;">
+    <i class="ti ti-pencil" style="color:#7a5c0a;font-size:15px;"></i>
+    <span style="color:#5a3e00;flex:1;">Edit mode — retail price, staff price, and cost are now editable. Click <strong>Save &amp; Lock</strong> when done.</span>
+    <button class="btn btn-green" onclick="saveLeadEdits()"><i class="ti ti-device-floppy"></i> Save &amp; Lock</button>
+    <button class="btn btn-outline" onclick="cancelLeadEdit()" style="font-size:12px;">Cancel</button>
+  </div>
+  <div class="stats" id="lead-stats"></div>
+  <div class="twrap">
+    <table>
+      <thead><tr><th>Item</th><th>Retail price</th><th>Staff price</th><th>Our cost</th><th>Margin</th><th>Units sold</th><th>Revenue</th><th>Profit</th></tr></thead>
+      <tbody id="lead-body"></tbody>
+      <tfoot><tr class="totrow" id="lead-totals"></tr></tfoot>
+    </table>
+  </div>
+
+  <!-- Shirt financials -->
+  <div style="margin-top:20px;">
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px;"><i class="ti ti-shirt" style="color:var(--teal);"></i> Shirt program financials</div>
+    <div class="stats" id="shirt-fin-stats"></div>
+    <div class="twrap" style="margin-top:12px;">
+      <table>
+        <thead><tr><th>Quarter</th><th>Type</th><th>Shirts given free</th><th>ATR cost (free)</th><th>Paid shirts sold</th><th>Revenue (paid)</th><th>Cost (paid)</th><th>Net cost to ATR</th></tr></thead>
+        <tbody id="shirt-fin-body"></tbody>
+        <tfoot><tr class="totrow" id="shirt-fin-totals"></tr></tfoot>
+      </table>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;"><i class="ti ti-flag" style="color:var(--melon);vertical-align:-2px;margin-right:4px;"></i>Paid shirt flags — payment to be collected separately</div>
+      <div id="shirt-paid-flags" style="font-size:13px;color:var(--text2);"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- ADD MERCH MODAL -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <h2><i class="ti ti-plus" style="color:var(--teal);margin-right:6px"></i>Add new merch item</h2>
+    <div class="form-grid">
+      <div class="form-group full"><label>Item name</label><input type="text" id="m-name" placeholder="e.g. ATR tote bag"></div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="m-cat"><option value="Apparel">Apparel</option><option value="Accessories">Accessories</option><option value="Home">Home &amp; lifestyle</option></select>
+      </div>
+      <div class="form-group"><label>SKU / size note</label><input type="text" id="m-sku" placeholder="e.g. S/M/L/XL"></div>
+      <div class="form-group"><label>Retail price ($)</label><input type="number" id="m-price" placeholder="0" min="0" step="0.50"></div>
+      <div class="form-group"><label>Our cost ($)</label><input type="number" id="m-cost" placeholder="0" min="0" step="0.50"></div>
+      <div class="form-group"><label>Qty in stock</label><input type="number" id="m-qty" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Low stock alert at</label><input type="number" id="m-low" placeholder="5" min="0"></div>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:1rem"><i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:4px"></i>After saving, also add this row to the <strong>Inventory</strong> tab in the spreadsheet so it persists across computers.</p>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-teal" onclick="saveNewMerch()"><i class="ti ti-check"></i> Save item</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let merchEditMode = false;
+let leadEditMode  = false;
+
+const CAT_CLASS = {Apparel:'b-apparel',Accessories:'b-accessories',Home:'b-home'};
+const CAT_LABEL = {Apparel:'Apparel',Accessories:'Accessories',Home:'Home & lifestyle'};
+
+let merch = [
+  {id:1,  name:'ATR Boxy Tee',      cat:'Apparel',      sku:'S/M/L/XL',        price:28, staffPrice:20,  cost:14.40, qty:0, low:5, sold:0},
+  {id:2,  name:'ATR T-Shirt',       cat:'Apparel',      sku:'S/M/L/XL',        price:25, staffPrice:15,  cost:8.25,  qty:0, low:5, sold:0},
+  {id:3,  name:'ATR Hat',           cat:'Apparel',      sku:'One size / Adj.', price:30, staffPrice:25,  cost:21.46, qty:0, low:5, sold:0},
+  {id:4,  name:'ATR Sweatshirt',    cat:'Apparel',      sku:'S/M/L/XL/2XL',   price:50, staffPrice:32,  cost:33.27, qty:0, low:5, sold:0},
+  {id:5,  name:'ATR Leash',         cat:'Accessories',  sku:'One size',        price:15, staffPrice:12.50, cost:12.02, qty:0, low:5, sold:0},
+  {id:6,  name:'ATR Joggers',       cat:'Apparel',      sku:'S/M/L/XL',        price:50, staffPrice:46,  cost:34.16, qty:0, low:5, sold:0},
+  {id:7,  name:'ATR Treat Bag',     cat:'Accessories',  sku:'One size',        price:15, staffPrice:null, cost:10.54, qty:0, low:5, sold:0},
+  {id:8,  name:'ATR Tote',          cat:'Accessories',  sku:'One size',        price:20, staffPrice:15,  cost:8.65,  qty:0, low:5, sold:0},
+  {id:9,  name:'ATR Stickers',      cat:'Accessories',  sku:'One size',        price:5,  staffPrice:null, cost:0.06,  qty:0, low:10, sold:0},
+  {id:10, name:'Volunteer Shirt',   cat:'Apparel',      sku:'XS/S/M/L/XL/2XL',price:17, staffPrice:null, cost:11.80, qty:0, low:5, sold:0},
+  {id:11, name:'MISC Tee',          cat:'Apparel',      sku:'Various',         price:25, staffPrice:null, cost:0,     qty:0, low:5, sold:0},
+  {id:12, name:'MISC Tank',         cat:'Apparel',      sku:'XS/S/M/L/XL',    price:20, staffPrice:null, cost:17.61, qty:0, low:5, sold:0},
+];
+
+let staff = {
+  'Q2 2026':[
+    {id:1,name:'Nikkieta Yahne',dept:'Operations',size:'S',received:true,date:'2026-04-03'},
+    {id:2,name:'Sherry Delgado',dept:'Animal Care',size:'M',received:true,date:'2026-04-03'},
+    {id:3,name:'Kyle Torres',dept:'Behavior',size:'L',received:false,date:''},
+    {id:4,name:'Courtney Mills',dept:'Foster',size:'S',received:true,date:'2026-04-10'},
+    {id:5,name:'Jenna Park',dept:'Adoptions',size:'M',received:true,date:'2026-04-05'},
+    {id:6,name:'Marcus Webb',dept:'Volunteer',size:'XL',received:false,date:''},
+    {id:7,name:'Daniela Reyes',dept:'Medical',size:'S',received:true,date:'2026-04-07'},
+    {id:8,name:'Aaron Finch',dept:'Intake',size:'2XL',received:false,date:''},
+  ],
+  'Q1 2026':[
+    {id:1,name:'Nikkieta Yahne',dept:'Operations',size:'S',received:true,date:'2026-01-08'},
+    {id:2,name:'Sherry Delgado',dept:'Animal Care',size:'M',received:true,date:'2026-01-08'},
+    {id:3,name:'Jenna Park',dept:'Adoptions',size:'M',received:true,date:'2026-01-12'},
+  ],
+};
+
+let volunteers = [
+  {id:1,name:'Sample Volunteer',size:'M',received:true,date:'2026-04-10',notes:''},
+];
+
+let counts = [];
+let nextId = 500;
+
+// ── SHIRT CONFIG ──────────────────────────────────────
+const FREE_SHIRTS_PER_QUARTER = 3;
+const SHIRT_COST   = 11.80;
+const SHIRT_RETAIL = 17.00;
+
+// Size inventory for staff shirts and volunteer shirts (shared pool)
+let staffShirtSizes  = {XS:0, S:0, M:0, L:0, XL:0, '2XL':0, '3XL':0};
+let volShirtSizes    = {XS:0, S:0, M:0, L:0, XL:0, '2XL':0, '3XL':0};
+
+// Paid shirt sales log [{id, date, name, type:'staff'|'volunteer', size, qty, amount}]
+let shirtSales = [];
+
+// ── TAB ──────────────────────────────────────────────
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='merch')  renderMerch();
+  if(tab==='count')  renderCount();
+  if(tab==='staff')  renderStaff();
+  if(tab==='vol')    renderVol();
+  if(tab==='lead')   { renderLead(); renderShirtFinancials(); }
+}
+
+// ── MERCH ────────────────────────────────────────────
+function renderMerchStats() {
+  const total=merch.reduce((a,i)=>a+i.qty,0);
+  const low=merch.filter(i=>i.qty<=i.low).length;
+  const invVal=merch.reduce((a,i)=>a+i.qty*i.price,0);
+  const revenue=merch.reduce((a,i)=>a+i.sold*i.price,0);
+  const unitsSold=merch.reduce((a,i)=>a+i.sold,0);
+  document.getElementById('merch-stats').innerHTML=`
+    <div class="stat"><div class="sl">Items</div><div class="sv">${merch.length}</div><div class="ss">unique SKUs</div></div>
+    <div class="stat"><div class="sl">Units in stock</div><div class="sv">${total}</div></div>
+    <div class="stat"><div class="sl">Inventory value</div><div class="sv">$${invVal.toLocaleString()}</div><div class="ss">on shelf at retail</div></div>
+    <div class="stat"><div class="sl">Units sold</div><div class="sv" style="color:var(--teal)">${unitsSold}</div><div class="ss">$${revenue.toLocaleString()} revenue</div></div>
+    <div class="stat"><div class="sl">Low stock alerts</div><div class="sv" style="color:${low>0?'var(--melon)':'var(--text)'}">${low}</div></div>
+  `;
+}
+function renderMerch() {
+  const q=document.getElementById('merch-search').value.toLowerCase();
+  const cat=document.getElementById('merch-cat').value;
+  const list=merch.filter(i=>(!q||i.name.toLowerCase().includes(q)||i.sku.toLowerCase().includes(q))&&(!cat||i.cat===cat));
+  document.getElementById('merch-body').innerHTML=list.map(i=>`
+    <tr>
+      <td style="font-weight:600;color:var(--teal)">${i.name}</td>
+      <td><span class="badge ${CAT_CLASS[i.cat]}">${CAT_LABEL[i.cat]}</span></td>
+      <td style="color:var(--text2);font-size:12px">${i.sku}</td>
+      <td>${merchEditMode
+        ? `<input type="number" id="me-price-${i.id}" value="${i.price}" min="0" step="0.50" style="width:72px;font-size:13px;padding:3px 7px;border:0.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);">`
+        : `$${i.price}`}</td>
+      <td class="${i.qty<=i.low?'qty-low':''}">${i.qty}</td>
+      <td style="color:var(--text3);font-size:12px">${i.sold} sold</td>
+      <td>${merchEditMode
+        ? `<input type="number" id="me-low-${i.id}" value="${i.low}" min="0" style="width:60px;font-size:13px;padding:3px 7px;border:0.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);">`
+        : `<span style="color:var(--text3)">${i.low}</span>`}</td>
+      <td style="white-space:nowrap">
+        <button class="ibtn" onclick="adj(${i.id},-1)" title="Adjust stock down"><i class="ti ti-minus"></i></button>
+        <button class="ibtn" onclick="adj(${i.id},1)" title="Adjust stock up"><i class="ti ti-plus"></i></button>
+        <button class="btn btn-teal" style="font-size:11px;padding:4px 10px;margin-left:4px" onclick="logSale(${i.id})" title="Log a sale"><i class="ti ti-shopping-cart"></i> Sale</button>
+        <button class="ibtn" onclick="delMerch(${i.id})" title="Delete"><i class="ti ti-trash"></i></button>
+      </td>
+    </tr>`).join('');
+  renderMerchStats();
+}
+function adj(id,d){
+  const it=merch.find(i=>i.id===id);
+  if(it){it.qty=Math.max(0,it.qty+d);renderMerch();}
+}
+function delMerch(id){if(confirm('Remove this item?')){merch=merch.filter(i=>i.id!==id);renderMerch();}}
+
+function logSale(id) {
+  const it = merch.find(i=>i.id===id);
+  if(!it) return;
+  const qtyStr = prompt(`Log a sale for "${it.name}"\nCurrently in stock: ${it.qty}\n\nHow many units sold?`,'1');
+  if(qtyStr===null) return;
+  const qty = parseInt(qtyStr);
+  if(isNaN(qty)||qty<=0){alert('Please enter a valid number greater than 0.');return;}
+  if(qty>it.qty){alert(`Only ${it.qty} unit${it.qty!==1?'s':''} in stock. Please enter ${it.qty} or less.`);return;}
+  it.qty -= qty;
+  it.sold += qty;
+  renderMerch();
+  if(document.getElementById('tab-lead').classList.contains('active')) renderLead();
+  const revenue = (qty * it.price).toFixed(2);
+  alert(`Sale logged!\n${qty} × ${it.name} = $${revenue}\n\nStock updated: ${it.qty} remaining.`);
+}
+
+function openAddMerch(){document.getElementById('add-modal').classList.add('open');}
+function closeModal(){
+  document.getElementById('add-modal').classList.remove('open');
+  ['m-name','m-sku','m-price','m-cost','m-qty','m-low'].forEach(id=>{document.getElementById(id).value='';});
+}
+function saveNewMerch(){
+  const name=document.getElementById('m-name').value.trim();
+  if(!name){alert('Please enter an item name.');return;}
+  merch.push({
+    id:nextId++,
+    name,
+    cat:document.getElementById('m-cat').value,
+    sku:document.getElementById('m-sku').value||'One size',
+    price:parseFloat(document.getElementById('m-price').value)||0,
+    cost:parseFloat(document.getElementById('m-cost').value)||0,
+    qty:parseInt(document.getElementById('m-qty').value)||0,
+    low:parseInt(document.getElementById('m-low').value)||5,
+    sold:0
+  });
+  renderMerch();
+  buildCountItems();
+  closeModal();
+}
+document.getElementById('add-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// ── INVENTORY COUNTS ─────────────────────────────────
+function buildCountItems() {
+  document.getElementById('count-items').innerHTML = merch.map(i=>`
+    <div class="item-count-row">
+      <div>
+        <div class="iname">${i.name}</div>
+        <div class="icurrent">Current: ${i.qty} in stock</div>
+      </div>
+      <input type="number" id="ci-${i.id}" value="${i.qty}" min="0" placeholder="0">
+    </div>
+  `).join('');
+  buildShirtSizeGrid('cnt-staff-sizes', 'cstaff', getStaffSizeTotals());
+  buildShirtSizeGrid('cnt-vol-sizes', 'cvol', getVolSizeTotals());
+}
+
+const SIZES = ['XS','S','M','L','XL','2XL','3XL'];
+
+function getStaffSizeTotals() {
+  const totals = {};
+  SIZES.forEach(s => totals[s] = 0);
+  Object.values(staff).forEach(arr => arr.forEach(e => { if(totals[e.size]!==undefined) totals[e.size]++; }));
+  return totals;
+}
+
+function getVolSizeTotals() {
+  const totals = {};
+  SIZES.forEach(s => totals[s] = 0);
+  volunteers.forEach(v => { if(totals[v.size]!==undefined) totals[v.size]++; });
+  return totals;
+}
+
+function buildShirtSizeGrid(containerId, prefix, currentTotals) {
+  document.getElementById(containerId).innerHTML = SIZES.map(sz => `
+    <div class="size-count-item">
+      <div class="size-lbl">${sz}</div>
+      <div class="size-cur">Logged: ${currentTotals[sz]||0}</div>
+      <input type="number" id="${prefix}-${sz}" value="${currentTotals[sz]||0}" min="0" placeholder="0">
+    </div>
+  `).join('');
+}
+
+function renderCountStats() {
+  const total = counts.length;
+  const last  = counts.length ? counts[counts.length-1] : null;
+  const nextQ = getNextCountQuarter();
+  document.getElementById('count-stats').innerHTML=`
+    <div class="stat"><div class="sl">Counts logged</div><div class="sv">${total}</div></div>
+    <div class="stat"><div class="sl">Last count</div><div class="sv" style="font-size:16px">${last ? last.date : '—'}</div><div class="ss">${last ? 'by '+last.who : 'none yet'}</div></div>
+    <div class="stat"><div class="sl">Last count by</div><div class="sv" style="font-size:16px">${last ? last.quarter : '—'}</div></div>
+    <div class="stat"><div class="sl">Next count due</div><div class="sv" style="font-size:15px">${nextQ}</div><div class="ss">quarterly cadence</div></div>
+  `;
+}
+
+function getNextCountQuarter() {
+  const quarters = ['Q1','Q2','Q3','Q4'];
+  const now = new Date();
+  const year = now.getFullYear();
+  const q = Math.ceil((now.getMonth()+1)/3);
+  const nextQ = q === 4 ? `Q1 ${year+1}` : `Q${q+1} ${year}`;
+  return nextQ;
+}
+
+function renderCountLog() {
+  const log = document.getElementById('count-log');
+  if(!counts.length){
+    log.innerHTML='<div class="count-empty"><i class="ti ti-clipboard" style="font-size:28px;display:block;margin-bottom:8px;opacity:.4"></i>No counts logged yet.<br>Use the form to log your first count.</div>';
+    return;
+  }
+  log.innerHTML=[...counts].reverse().map((c,idx)=>{
+    const prev = counts.length-1-idx-1 >= 0 ? counts[counts.length-1-idx-1] : null;
+    const snaps = c.items.map(it=>{
+      const prevSnap = prev ? prev.items.find(x=>x.id===it.id) : null;
+      let cls = '';
+      if(prevSnap){
+        if(it.count > prevSnap.count) cls='changed-up';
+        else if(it.count < prevSnap.count) cls='changed-down';
+      }
+      return `<span class="snap-item ${cls}">${it.name}: ${it.count}</span>`;
+    }).join('');
+    return `
+      <div class="count-entry">
+        <div class="count-entry-header">
+          <div>
+            <div class="count-entry-meta"><i class="ti ti-calendar" style="vertical-align:-2px;margin-right:4px;font-size:13px"></i>${c.date} &nbsp;<span class="quarter-badge">${c.quarter}</span></div>
+            <div class="count-entry-sub">Conducted by ${c.who} &nbsp;·&nbsp; ${c.items.reduce((a,x)=>a+x.count,0)} total units</div>
+          </div>
+          <button class="ibtn" onclick="deleteCount(${c.id})" title="Delete count"><i class="ti ti-trash"></i></button>
+        </div>
+        ${c.notes?`<div class="count-entry-notes">"${c.notes}"</div>`:''}
+        <div class="count-snapshot">${snaps}</div>
+        ${c.staffSizes ? `
+        <div style="margin-top:8px">
+          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px"><i class="ti ti-shirt" style="vertical-align:-2px;margin-right:3px"></i>Staff shirts</div>
+          <div class="count-snapshot">${SIZES.filter(sz=>c.staffSizes[sz]>0).map(sz=>`<span class="snap-item">${sz}: ${c.staffSizes[sz]}</span>`).join('')||'<span style="font-size:12px;color:var(--text3)">None recorded</span>'}</div>
+        </div>` : ''}
+        ${c.volSizes ? `
+        <div style="margin-top:8px">
+          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px"><i class="ti ti-heart-handshake" style="vertical-align:-2px;margin-right:3px"></i>Volunteer shirts</div>
+          <div class="count-snapshot">${SIZES.filter(sz=>c.volSizes[sz]>0).map(sz=>`<span class="snap-item">${sz}: ${c.volSizes[sz]}</span>`).join('')||'<span style="font-size:12px;color:var(--text3)">None recorded</span>'}</div>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function renderCount() {
+  buildCountItems();
+  renderCountStats();
+  renderCountLog();
+  // set today's date as default
+  const d = document.getElementById('cnt-date');
+  if(!d.value) d.value = today();
+}
+
+function saveCount() {
+  const date  = document.getElementById('cnt-date').value;
+  const who   = document.getElementById('cnt-who').value.trim();
+  const qtr   = document.getElementById('cnt-quarter').value;
+  const notes = document.getElementById('cnt-notes').value.trim();
+  if(!date||!who){alert('Please enter a date and your name.');return;}
+
+  const items = merch.map(i=>{
+    const val = parseInt(document.getElementById('ci-'+i.id)?.value)||0;
+    return {id:i.id, name:i.name, count:val};
+  });
+
+  // Capture shirt size counts
+  const staffSizes = {}, volSizes = {};
+  SIZES.forEach(sz => {
+    staffSizes[sz] = parseInt(document.getElementById('cstaff-'+sz)?.value)||0;
+    volSizes[sz]   = parseInt(document.getElementById('cvol-'+sz)?.value)||0;
+  });
+
+  // Update live qty in merch to match the count
+  items.forEach(it=>{
+    const m = merch.find(x=>x.id===it.id);
+    if(m) m.qty = it.count;
+  });
+
+  counts.push({id:nextId++, date, who, quarter:qtr, notes, items, staffSizes, volSizes});
+
+  document.getElementById('cnt-who').value='';
+  document.getElementById('cnt-notes').value='';
+
+  renderCount();
+  renderMerchStats();
+  alert('Count saved! Qty in stock updated to match your count.');
+}
+
+function deleteCount(id){
+  if(confirm('Delete this count entry?')){
+    counts=counts.filter(c=>c.id!==id);
+    renderCountStats();
+    renderCountLog();
+  }
+}
+
+// ── STAFF SHIRT SIZE INVENTORY ────────────────────────
+let staffSizeEditMode = false;
+let volSizeEditMode   = false;
+
+function renderSizeGrid(containerId, sizeData, editMode, prefix) {
+  document.getElementById(containerId).innerHTML = SIZES.map(sz => {
+    const qty = sizeData[sz] || 0;
+    const low = qty <= 2;
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;background:${low?'var(--melon-lt)':'var(--surface2)'};border-radius:var(--r-md);min-width:68px;border:0.5px solid ${low?'#f5c4c4':'var(--border)'};">
+      <div style="font-size:11px;font-weight:600;color:${low?'var(--melon)':'var(--text2)'};">${sz}</div>
+      ${editMode
+        ? `<input type="number" id="${prefix}-${sz}" value="${qty}" min="0" style="width:54px;font-size:14px;font-weight:600;padding:4px 6px;border:0.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);text-align:center;">`
+        : `<div style="font-size:20px;font-weight:700;color:${low?'var(--melon)':'var(--text)'};">${qty}</div>`}
+      <div style="font-size:10px;color:var(--text3);">on hand</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleStaffSizeEdit() {
+  staffSizeEditMode = true;
+  document.getElementById('staff-size-edit-btn').style.display = 'none';
+  document.getElementById('staff-size-save-row').style.display = 'flex';
+  renderSizeGrid('staff-size-grid', staffShirtSizes, true, 'sss');
+}
+function saveStaffSizeEdits() {
+  SIZES.forEach(sz => {
+    const el = document.getElementById(`sss-${sz}`);
+    if (el) staffShirtSizes[sz] = parseInt(el.value) || 0;
+  });
+  staffSizeEditMode = false;
+  document.getElementById('staff-size-edit-btn').style.display = '';
+  document.getElementById('staff-size-save-row').style.display = 'none';
+  renderSizeGrid('staff-size-grid', staffShirtSizes, false, 'sss');
+  saveShirtSizes();
+}
+function cancelStaffSizeEdit() {
+  staffSizeEditMode = false;
+  document.getElementById('staff-size-edit-btn').style.display = '';
+  document.getElementById('staff-size-save-row').style.display = 'none';
+  renderSizeGrid('staff-size-grid', staffShirtSizes, false, 'sss');
+}
+
+function toggleVolSizeEdit() {
+  volSizeEditMode = true;
+  document.getElementById('vol-size-edit-btn').style.display = 'none';
+  document.getElementById('vol-size-save-row').style.display = 'flex';
+  renderSizeGrid('vol-size-grid', volShirtSizes, true, 'vss');
+}
+function saveVolSizeEdits() {
+  SIZES.forEach(sz => {
+    const el = document.getElementById(`vss-${sz}`);
+    if (el) volShirtSizes[sz] = parseInt(el.value) || 0;
+  });
+  volSizeEditMode = false;
+  document.getElementById('vol-size-edit-btn').style.display = '';
+  document.getElementById('vol-size-save-row').style.display = 'none';
+  renderSizeGrid('vol-size-grid', volShirtSizes, false, 'vss');
+  saveShirtSizes();
+}
+function cancelVolSizeEdit() {
+  volSizeEditMode = false;
+  document.getElementById('vol-size-edit-btn').style.display = '';
+  document.getElementById('vol-size-save-row').style.display = 'none';
+  renderSizeGrid('vol-size-grid', volShirtSizes, false, 'vss');
+}
+
+// ── Count how many shirts an employee has received this quarter ───
+function getStaffShirtCount(q, name) {
+  return (staff[q] || []).filter(e => e.name === name && e.received).length;
+}
+
+// ── STAFF SHIRTS ─────────────────────────────────────
+function renderStaff(){
+  const q = document.getElementById('staff-quarter').value;
+  const data = staff[q] || [];
+  const recv = data.filter(e => e.received).length;
+  const paid = data.filter(e => e.paidFlag).length;
+  const free = recv - paid;
+
+  document.getElementById('staff-stats').innerHTML=`
+    <div class="stat"><div class="sl">Logged</div><div class="sv">${data.length}</div></div>
+    <div class="stat"><div class="sl">Received</div><div class="sv" style="color:var(--teal)">${recv}</div></div>
+    <div class="stat"><div class="sl">Free (allotment)</div><div class="sv" style="color:var(--green-dk)">${free}</div><div class="ss">${FREE_SHIRTS_PER_QUARTER} per employee</div></div>
+    <div class="stat"><div class="sl">Paid shirts flagged</div><div class="sv" style="color:${paid>0?'var(--melon)':'var(--text)'}">${paid}</div><div class="ss">collect payment</div></div>
+    <div class="stat"><div class="sl">Pending</div><div class="sv" style="color:${(data.length-recv)>0?'var(--melon)':'var(--text)'}">${data.length-recv}</div></div>
+  `;
+
+  renderSizeGrid('staff-size-grid', staffShirtSizes, false, 'sss');
+
+  // Check for anyone over allotment
+  const overAllotment = [];
+  const nameGroups = {};
+  data.forEach(e => { if(!nameGroups[e.name]) nameGroups[e.name]=0; if(e.received) nameGroups[e.name]++; });
+  Object.entries(nameGroups).forEach(([name, count]) => { if(count > FREE_SHIRTS_PER_QUARTER) overAllotment.push(`${name} (${count} shirts)`); });
+  const banner = document.getElementById('staff-allotment-banner');
+  if (overAllotment.length) {
+    banner.style.display = 'block';
+    banner.innerHTML = `<i class="ti ti-alert-triangle" style="margin-right:6px;"></i><strong>Over free allotment (${FREE_SHIRTS_PER_QUARTER}/quarter):</strong> ${overAllotment.join(', ')} — additional shirts flagged for payment.`;
+  } else {
+    banner.style.display = 'none';
+  }
+
+  if(!data.length){document.getElementById('staff-body').innerHTML='<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--text3)">No entries yet. Add below.</td></tr>';return;}
+
+  document.getElementById('staff-body').innerHTML=data.map(e=>{
+    const qCount = getStaffShirtCount(q, e.name);
+    const isOverAllotment = e.received && qCount > FREE_SHIRTS_PER_QUARTER;
+    const statusHtml = e.received
+      ? (isOverAllotment || e.paidFlag
+          ? `<span class="badge" style="background:#fae9e4;color:#7a3015;"><i class="ti ti-alert-triangle" style="vertical-align:-2px;margin-right:2px;font-size:11px;"></i>Paid — collect $${SHIRT_RETAIL}</span>`
+          : `<span class="badge" style="background:var(--green-lt);color:var(--green-dk);">Free allotment</span>`)
+      : `<span class="badge" style="background:var(--surface2);color:var(--text3);">Pending</span>`;
+    return `<tr style="${isOverAllotment||e.paidFlag?'background:#fff8f6;':''}">
+      <td style="font-weight:500">${e.name}</td>
+      <td><span class="badge b-dept">${e.dept}</span></td>
+      <td><span class="size-pill">${e.size}</span></td>
+      <td style="text-align:center;font-size:13px;color:var(--text2);">${qCount} / ${FREE_SHIRTS_PER_QUARTER}</td>
+      <td style="text-align:center">
+        <button class="chkbtn ${e.received?'chk-yes':'chk-no'}" onclick="toggleStaff('${q}',${e.id})">
+          <i class="ti ${e.received?'ti-circle-check':'ti-circle'}"></i>
+        </button>
+      </td>
+      <td style="font-size:12px;color:var(--text3)">${e.received&&e.date?e.date:'—'}</td>
+      <td>${statusHtml}</td>
+      <td><button class="ibtn" onclick="delStaff('${q}',${e.id})"><i class="ti ti-trash"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleStaff(q, id) {
+  const e = (staff[q]||[]).find(x=>x.id===id);
+  if (!e) return;
+  e.received = !e.received;
+  e.date = e.received ? today() : '';
+  if (e.received) {
+    // Check if this puts them over allotment
+    const qCount = getStaffShirtCount(q, e.name);
+    if (qCount > FREE_SHIRTS_PER_QUARTER) {
+      e.paidFlag = true;
+      alert(`${e.name} has now received ${qCount} shirts this quarter (limit: ${FREE_SHIRTS_PER_QUARTER} free).\n\nThis shirt has been flagged — collect $${SHIRT_RETAIL} payment separately.`);
+    } else {
+      e.paidFlag = false;
+      // Deduct from size inventory
+      if (staffShirtSizes[e.size] > 0) {
+        staffShirtSizes[e.size]--;
+        saveShirtSizes();
+      } else {
+        alert(`Warning: No ${e.size} staff shirts in inventory. Update your size counts.`);
+      }
+    }
+  } else {
+    // Un-receiving — add back to inventory if it was a free shirt
+    if (!e.paidFlag) {
+      staffShirtSizes[e.size] = (staffShirtSizes[e.size] || 0) + 1;
+      saveShirtSizes();
+    }
+    e.paidFlag = false;
+  }
+  renderStaff();
+  renderShirtFinancials();
+}
+
+function delStaff(q, id) {
+  if (staff[q]) staff[q] = staff[q].filter(e=>e.id!==id);
+  renderStaff();
+}
+
+function addStaff() {
+  const q    = document.getElementById('staff-quarter').value;
+  const name = document.getElementById('s-name').value.trim();
+  const dept = document.getElementById('s-dept').value.trim();
+  const size = document.getElementById('s-size').value;
+  if(!name||!dept){alert('Please enter name and department.');return;}
+  if(!staff[q]) staff[q]=[];
+  staff[q].push({id:nextId++, name, dept, size, received:false, date:'', paidFlag:false});
+  document.getElementById('s-name').value='';
+  document.getElementById('s-dept').value='';
+  renderStaff();
+}
+
+// ── VOLUNTEER SHIRTS ──────────────────────────────────
+function renderVol(){
+  const recv = volunteers.filter(v=>v.received).length;
+  document.getElementById('vol-stats').innerHTML=`
+    <div class="stat"><div class="sl">Total logged</div><div class="sv">${volunteers.length}</div></div>
+    <div class="stat"><div class="sl">Received & paid</div><div class="sv" style="color:#2a7a3a">${recv}</div></div>
+    <div class="stat"><div class="sl">Revenue</div><div class="sv">$${(recv*SHIRT_RETAIL).toFixed(2)}</div><div class="ss">@ $${SHIRT_RETAIL}/shirt</div></div>
+    <div class="stat"><div class="sl">Pending</div><div class="sv" style="color:${(volunteers.length-recv)>0?'var(--melon)':'var(--text)'}">${volunteers.length-recv}</div></div>
+  `;
+
+  renderSizeGrid('vol-size-grid', volShirtSizes, false, 'vss');
+
+  if(!volunteers.length){document.getElementById('vol-body').innerHTML='<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text3)">No volunteer entries yet. Add below.</td></tr>';return;}
+  document.getElementById('vol-body').innerHTML=volunteers.map(v=>`
+    <tr>
+      <td style="font-weight:500">${v.name}</td>
+      <td><span class="size-pill">${v.size}</span></td>
+      <td style="text-align:center">
+        <button class="chkbtn ${v.received?'chk-yes':'chk-no'}" onclick="toggleVol(${v.id})">
+          <i class="ti ${v.received?'ti-circle-check':'ti-circle'}"></i>
+        </button>
+        ${v.received ? `<span class="badge" style="background:#fae9e4;color:#7a3015;margin-left:6px;font-size:10px;">Collect $${SHIRT_RETAIL}</span>` : ''}
+      </td>
+      <td style="font-size:12px;color:var(--text3)">${v.received&&v.date?v.date:'—'}</td>
+      <td style="font-size:12px;color:var(--text2)">${v.notes||'—'}</td>
+      <td><button class="ibtn" onclick="delVol(${v.id})"><i class="ti ti-trash"></i></button></td>
+    </tr>`).join('');
+}
+
+function toggleVol(id) {
+  const v = volunteers.find(x=>x.id===id);
+  if (!v) return;
+  v.received = !v.received;
+  v.date = v.received ? today() : '';
+  if (v.received) {
+    if (volShirtSizes[v.size] > 0) {
+      volShirtSizes[v.size]--;
+      saveShirtSizes();
+    } else {
+      alert(`Warning: No ${v.size} volunteer shirts in inventory. Update your size counts.`);
+    }
+  } else {
+    volShirtSizes[v.size] = (volShirtSizes[v.size] || 0) + 1;
+    saveShirtSizes();
+  }
+  renderVol();
+  renderShirtFinancials();
+}
+
+function delVol(id) { volunteers = volunteers.filter(v=>v.id!==id); renderVol(); }
+
+function addVol() {
+  const name  = document.getElementById('v-name').value.trim();
+  const size  = document.getElementById('v-size').value;
+  const notes = document.getElementById('v-notes').value.trim();
+  if(!name){alert('Please enter a volunteer name.');return;}
+  volunteers.push({id:nextId++, name, size, received:false, date:'', notes});
+  document.getElementById('v-name').value='';
+  document.getElementById('v-notes').value='';
+  renderVol();
+}
+
+// ── SHIRT FINANCIALS ──────────────────────────────────
+function renderShirtFinancials() {
+  // Aggregate by quarter for staff
+  const quarters = [...new Set(Object.keys(staff))].sort();
+  const rows = [];
+
+  quarters.forEach(q => {
+    const data = staff[q] || [];
+    const freeShirts = data.filter(e => e.received && !e.paidFlag).length;
+    const paidStaff  = data.filter(e => e.received && e.paidFlag).length;
+    rows.push({
+      quarter: q,
+      type: 'Staff',
+      freeQty: freeShirts,
+      freeCost: freeShirts * SHIRT_COST,
+      paidQty: paidStaff,
+      paidRev: paidStaff * SHIRT_RETAIL,
+      paidCost: paidStaff * SHIRT_COST,
+    });
+  });
+
+  // Volunteers — no quarter, lump as current
+  const volRecv = volunteers.filter(v=>v.received).length;
+  rows.push({
+    quarter: 'Current',
+    type: 'Volunteer',
+    freeQty: 0,
+    freeCost: 0,
+    paidQty: volRecv,
+    paidRev: volRecv * SHIRT_RETAIL,
+    paidCost: volRecv * SHIRT_COST,
+  });
+
+  const totFree    = rows.reduce((a,r)=>a+r.freeQty,0);
+  const totFreeCost= rows.reduce((a,r)=>a+r.freeCost,0);
+  const totPaidQty = rows.reduce((a,r)=>a+r.paidQty,0);
+  const totPaidRev = rows.reduce((a,r)=>a+r.paidRev,0);
+  const totPaidCost= rows.reduce((a,r)=>a+r.paidCost,0);
+  const totNet     = totFreeCost + totPaidCost - totPaidRev;
+
+  document.getElementById('shirt-fin-stats').innerHTML=`
+    <div class="stat"><div class="sl">Free shirts given</div><div class="sv">${totFree}</div><div class="ss">ATR cost $${totFreeCost.toFixed(2)}</div></div>
+    <div class="stat"><div class="sl">Paid shirts</div><div class="sv" style="color:var(--teal)">${totPaidQty}</div><div class="ss">$${totPaidRev.toFixed(2)} revenue</div></div>
+    <div class="stat"><div class="sl">Net cost to ATR</div><div class="sv" style="color:${totNet>0?'var(--melon)':'#1a7a3a'}">$${totNet.toFixed(2)}</div><div class="ss">${totNet>0?'expense':'recovered'}</div></div>
+    <div class="stat"><div class="sl">Shirt cost</div><div class="sv" style="font-size:16px;">$${SHIRT_COST}</div><div class="ss">per shirt (our cost)</div></div>
+  `;
+
+  document.getElementById('shirt-fin-body').innerHTML = rows.map(r => {
+    const net = r.freeCost + r.paidCost - r.paidRev;
+    return `<tr>
+      <td style="font-weight:500">${r.quarter}</td>
+      <td><span class="badge ${r.type==='Staff'?'b-dept':'b-accessories'}">${r.type}</span></td>
+      <td>${r.freeQty}</td>
+      <td style="color:var(--melon);">$${r.freeCost.toFixed(2)}</td>
+      <td>${r.paidQty}</td>
+      <td style="color:#1a7a3a;">$${r.paidRev.toFixed(2)}</td>
+      <td>$${r.paidCost.toFixed(2)}</td>
+      <td style="font-weight:600;color:${net>0?'var(--melon)':'#1a7a3a'};">$${net.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('shirt-fin-totals').innerHTML=`
+    <td style="font-weight:700;">Totals</td><td></td>
+    <td>${totFree}</td>
+    <td style="color:var(--melon);font-weight:600;">$${totFreeCost.toFixed(2)}</td>
+    <td>${totPaidQty}</td>
+    <td style="color:#1a7a3a;font-weight:600;">$${totPaidRev.toFixed(2)}</td>
+    <td>$${totPaidCost.toFixed(2)}</td>
+    <td style="font-weight:700;color:${totNet>0?'var(--melon)':'#1a7a3a'};">$${totNet.toFixed(2)}</td>
+  `;
+
+  // Paid flags summary
+  const flags = [];
+  Object.entries(staff).forEach(([q, data]) => {
+    data.filter(e=>e.paidFlag).forEach(e => {
+      flags.push(`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff8f6;border-radius:var(--r-md);margin-bottom:6px;border:0.5px solid #f5c4c4;">
+        <i class="ti ti-alert-triangle" style="color:var(--melon);"></i>
+        <span><strong>${e.name}</strong> — ${e.size} staff shirt, ${q}</span>
+        <span style="margin-left:auto;font-weight:600;color:var(--melon);">Collect $${SHIRT_RETAIL}</span>
+      </div>`);
+    });
+  });
+  volunteers.filter(v=>v.received).forEach(v => {
+    flags.push(`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff8f6;border-radius:var(--r-md);margin-bottom:6px;border:0.5px solid #f5c4c4;">
+      <i class="ti ti-alert-triangle" style="color:var(--melon);"></i>
+      <span><strong>${v.name}</strong> — ${v.size} volunteer shirt</span>
+      <span style="margin-left:auto;font-weight:600;color:var(--melon);">Collect $${SHIRT_RETAIL}</span>
+    </div>`);
+  });
+  const flagEl = document.getElementById('shirt-paid-flags');
+  if (flagEl) flagEl.innerHTML = flags.length ? flags.join('') : '<p style="color:var(--text3);font-size:13px;">No outstanding payments — all clear!</p>';
+}
+
+// ── FINANCIALS ──────────────────────────────────────────
+function renderLead(){
+  const totRev=merch.reduce((a,i)=>a+i.sold*i.price,0);
+  const totCost=merch.reduce((a,i)=>a+i.sold*i.cost,0);
+  const totProfit=totRev-totCost;
+  const avgMargin=totRev>0?Math.round((totProfit/totRev)*100):0;
+  document.getElementById('lead-stats').innerHTML=`
+    <div class="stat"><div class="sl">Revenue</div><div class="sv">$${totRev.toLocaleString()}</div></div>
+    <div class="stat"><div class="sl">Total cost</div><div class="sv">$${totCost.toLocaleString()}</div></div>
+    <div class="stat"><div class="sl">Profit</div><div class="sv" style="color:${totProfit>=0?'#1a7a3a':'var(--melon)'}">$${totProfit.toLocaleString()}</div></div>
+    <div class="stat"><div class="sl">Avg margin</div><div class="sv">${avgMargin}%</div></div>
+  `;
+  const inp = (id,val,w=72) => `<input type="number" id="${id}" value="${val}" min="0" step="0.50" style="width:${w}px;font-size:13px;padding:3px 7px;border:0.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);">`;
+  document.getElementById('lead-body').innerHTML=merch.map(i=>{
+    const rev=i.sold*i.price, profit=rev-(i.sold*i.cost);
+    const margin=i.price>0?Math.round(((i.price-i.cost)/i.price)*100):0;
+    const staffDisplay = i.staffPrice!=null ? (leadEditMode ? inp(`le-staff-${i.id}`,i.staffPrice,68) : '$'+i.staffPrice) : '<span style="color:var(--text3);font-size:11px">N/A</span>';
+    return `<tr>
+      <td style="font-weight:600;color:var(--teal)">${i.name}</td>
+      <td>${leadEditMode ? inp(`le-price-${i.id}`,i.price) : '$'+i.price}</td>
+      <td>${staffDisplay}</td>
+      <td>${leadEditMode
+        ? inp(`le-cost-${i.id}`,i.cost)
+        : `<div style="display:inline-flex;align-items:center;gap:4px">$${i.cost}${i.cost===0?'<span style="font-size:10px;color:var(--text3)">TBD</span>':''}</div>`}
+      </td>
+      <td><div style="display:flex;align-items:center;gap:7px"><div class="margin-wrap"><div class="margin-bar" style="width:${Math.min(margin,100)}%"></div></div><span style="font-size:12px;color:var(--text2)">${i.cost>0?margin+'%':'—'}</span></div></td>
+      <td><input type="number" value="${i.sold}" min="0" style="width:62px;font-size:13px;padding:3px 7px;border:0.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text)" onchange="updSold(${i.id},this.value)"></td>
+      <td style="font-weight:500">$${rev.toLocaleString()}</td>
+      <td class="${profit>=0?'profit-pos':'profit-neg'}">${i.cost>0?'$'+profit.toLocaleString():'—'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('lead-totals').innerHTML=`
+    <td>Totals</td><td></td><td></td><td></td><td></td>
+    <td>${merch.reduce((a,i)=>a+i.sold,0)} units</td>
+    <td>$${totRev.toLocaleString()}</td>
+    <td class="${totProfit>=0?'profit-pos':'profit-neg'}">$${totProfit.toLocaleString()}</td>
+  `;
+}
+function updCost(id,v){const it=merch.find(i=>i.id===id);if(it){it.cost=parseFloat(v)||0;renderLead();}}
+function updSold(id,v){const it=merch.find(i=>i.id===id);if(it){it.sold=parseInt(v)||0;renderLead();}}
+
+// ── UTILS ─────────────────────────────────────────────
+function today(){return new Date().toISOString().slice(0,10);}
+
+// ── MERCH EDIT MODE ───────────────────────────────────
+function toggleMerchEdit() {
+  merchEditMode = true;
+  document.getElementById('merch-edit-btn').style.display = 'none';
+  document.getElementById('merch-edit-banner').style.display = 'flex';
+  renderMerch();
+}
+function saveMerchEdits() {
+  merch.forEach(i => {
+    const priceEl = document.getElementById(`me-price-${i.id}`);
+    const lowEl   = document.getElementById(`me-low-${i.id}`);
+    if (priceEl) i.price = parseFloat(priceEl.value) || 0;
+    if (lowEl)   i.low   = parseInt(lowEl.value)     || 0;
+  });
+  merchEditMode = false;
+  document.getElementById('merch-edit-btn').style.display = '';
+  document.getElementById('merch-edit-banner').style.display = 'none';
+  renderMerch();
+  saveMerch();
+}
+function cancelMerchEdit() {
+  merchEditMode = false;
+  document.getElementById('merch-edit-btn').style.display = '';
+  document.getElementById('merch-edit-banner').style.display = 'none';
+  renderMerch();
+}
+
+// ── FINANCIALS EDIT MODE ──────────────────────────────
+function toggleLeadEdit() {
+  leadEditMode = true;
+  document.getElementById('lead-edit-btn').style.display = 'none';
+  document.getElementById('lead-edit-banner').style.display = 'flex';
+  renderLead();
+}
+function saveLeadEdits() {
+  merch.forEach(i => {
+    const priceEl = document.getElementById(`le-price-${i.id}`);
+    const staffEl = document.getElementById(`le-staff-${i.id}`);
+    const costEl  = document.getElementById(`le-cost-${i.id}`);
+    if (priceEl) i.price      = parseFloat(priceEl.value) || 0;
+    if (staffEl) i.staffPrice = parseFloat(staffEl.value) || null;
+    if (costEl)  i.cost       = parseFloat(costEl.value)  || 0;
+  });
+  leadEditMode = false;
+  document.getElementById('lead-edit-btn').style.display = '';
+  document.getElementById('lead-edit-banner').style.display = 'none';
+  renderLead();
+  saveMerch();
+}
+function cancelLeadEdit() {
+  leadEditMode = false;
+  document.getElementById('lead-edit-btn').style.display = '';
+  document.getElementById('lead-edit-banner').style.display = 'none';
+  renderLead();
+}
+
+// ════════════════════════════════════════════════════════
+// GOOGLE SHEETS SYNC LAYER
+// ════════════════════════════════════════════════════════
+
+// ── CONFIG — paste your Apps Script Web App URL here ──
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzIZBMvA2Oc5SJ_TMTBD1veXwtufxw_COOSn2YOag6LqN01zuiRvRX7NvNYv-ClG317/exec'; // ← PASTE YOUR WEB APP URL HERE
+
+let syncStatus = 'idle'; // idle | loading | saving | error | ok
+
+// ── Status bar UI ─────────────────────────────────────
+function setSyncStatus(state, msg) {
+  syncStatus = state;
+  const bar = document.getElementById('sync-bar');
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-txt');
+  const spin = document.getElementById('sync-spin');
+  if (!bar) return;
+  const configs = {
+    idle:    { color: '#9a998f', text: msg || 'Not connected — paste Web App URL to enable sync', spin: false },
+    loading: { color: '#4B929B', text: msg || 'Loading from Google Sheets…', spin: true },
+    saving:  { color: '#4B929B', text: msg || 'Saving to Google Sheets…', spin: true },
+    ok:      { color: '#5a8c1a', text: msg || 'Synced with Google Sheets', spin: false },
+    error:   { color: '#E0694A', text: msg || 'Sync error — changes saved locally only', spin: false },
+  };
+  const cfg = configs[state] || configs.idle;
+  dot.style.background = cfg.color;
+  txt.textContent = cfg.text;
+  spin.style.display = cfg.spin ? 'inline' : 'none';
+}
+
+// ── Generic fetch wrapper ──────────────────────────────
+async function sheetsCall(action, payload = {}) {
+  if (!SHEETS_URL) return null;
+  try {
+    const res = await fetch(SHEETS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // avoids CORS preflight
+      body: JSON.stringify({ action, ...payload }),
+      redirect: 'follow',
+    });
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    return json;
+  } catch (e) {
+    console.error('Sheets error:', e);
+    setSyncStatus('error', 'Sync error: ' + e.message);
+    return null;
+  }
+}
+
+// ── LOAD all data from Sheets on startup ───────────────
+async function loadFromSheets() {
+  if (!SHEETS_URL) { setSyncStatus('idle'); initRender(); return; }
+  setSyncStatus('loading');
+  const data = await sheetsCall('load');
+  if (!data) { setSyncStatus('error', 'Could not reach Google Sheets — using local data'); initRender(); return; }
+
+  // Merch inventory
+  if (data.merch && data.merch.length) {
+    merch = data.merch.map(r => ({
+      id:         Number(r.id),
+      name:       r.name || '',
+      cat:        r.cat || 'Apparel',
+      sku:        r.sku || '',
+      price:      Number(r.price) || 0,
+      staffPrice: r.staffPrice !== '' && r.staffPrice != null ? Number(r.staffPrice) : null,
+      cost:       Number(r.cost) || 0,
+      qty:        Number(r.qty) || 0,
+      low:        Number(r.low) || 5,
+      sold:       Number(r.sold) || 0,
+    }));
+  }
+
+  // Staff shirts
+  if (data.staff) {
+    staff = {};
+    data.staff.forEach(r => {
+      if (!staff[r.quarter]) staff[r.quarter] = [];
+      staff[r.quarter].push({
+        id:       Number(r.id),
+        name:     r.name,
+        dept:     r.dept,
+        size:     r.size,
+        received: r.received === 'TRUE' || r.received === true,
+        date:     r.date || '',
+        paidFlag: r.paidFlag === 'TRUE' || r.paidFlag === true,
+      });
+    });
+  }
+
+  // Volunteers
+  if (data.volunteers && data.volunteers.length) {
+    volunteers = data.volunteers.map(r => ({
+      id:       Number(r.id),
+      name:     r.name,
+      size:     r.size,
+      received: r.received === 'TRUE' || r.received === true,
+      date:     r.date || '',
+      notes:    r.notes || '',
+    }));
+  }
+
+  // Counts log
+  if (data.counts && data.counts.length) {
+    counts = data.counts.map(r => ({
+      id:         Number(r.id),
+      date:       r.date,
+      who:        r.who,
+      quarter:    r.quarter,
+      notes:      r.notes || '',
+      items:      JSON.parse(r.items || '[]'),
+      staffSizes: JSON.parse(r.staffSizes || '{}'),
+      volSizes:   JSON.parse(r.volSizes || '{}'),
+    }));
+  }
+
+  // Shirt sizes
+  if (data.shirtSizes && data.shirtSizes.length) {
+    data.shirtSizes.forEach(r => {
+      if (r.type === 'staff')     staffShirtSizes[r.size] = parseInt(r.qty) || 0;
+      if (r.type === 'volunteer') volShirtSizes[r.size]   = parseInt(r.qty) || 0;
+    });
+  }
+
+  setSyncStatus('ok', 'Loaded from Google Sheets · ' + new Date().toLocaleTimeString());
+  initRender();
+}
+
+// ── SAVE helpers (called after every mutation) ─────────
+
+async function saveMerch() {
+  if (!SHEETS_URL) return;
+  setSyncStatus('saving');
+  const result = await sheetsCall('saveMerch', { rows: merch });
+  if (result) setSyncStatus('ok', 'Inventory saved · ' + new Date().toLocaleTimeString());
+}
+
+async function saveStaff() {
+  if (!SHEETS_URL) return;
+  setSyncStatus('saving');
+  const rows = [];
+  Object.entries(staff).forEach(([quarter, arr]) =>
+    arr.forEach(e => rows.push({ ...e, quarter, paidFlag: e.paidFlag ? 'TRUE' : 'FALSE' }))
+  );
+  const result = await sheetsCall('saveStaff', { rows });
+  if (result) setSyncStatus('ok', 'Staff shirts saved · ' + new Date().toLocaleTimeString());
+}
+
+async function saveVolunteers() {
+  if (!SHEETS_URL) return;
+  setSyncStatus('saving');
+  const result = await sheetsCall('saveVolunteers', { rows: volunteers });
+  if (result) setSyncStatus('ok', 'Volunteer shirts saved · ' + new Date().toLocaleTimeString());
+}
+
+async function saveCounts() {
+  if (!SHEETS_URL) return;
+  setSyncStatus('saving');
+  const rows = counts.map(c => ({
+    ...c,
+    items:      JSON.stringify(c.items),
+    staffSizes: JSON.stringify(c.staffSizes || {}),
+    volSizes:   JSON.stringify(c.volSizes || {}),
+  }));
+  const result = await sheetsCall('saveCounts', { rows });
+  if (result) setSyncStatus('ok', 'Count log saved · ' + new Date().toLocaleTimeString());
+}
+
+async function saveShirtSizes() {
+  if (!SHEETS_URL) return;
+  const result = await sheetsCall('saveShirtSizes', {
+    staffSizes: staffShirtSizes,
+    volSizes:   volShirtSizes,
+  });
+  if (result) setSyncStatus('ok', 'Shirt sizes saved · ' + new Date().toLocaleTimeString());
+}
+
+// ── Patch existing mutating functions to auto-save ─────
+
+// adj → save merch after stock change
+const _adj = adj;
+window.adj = function(id, d) { _adj(id, d); saveMerch(); };
+
+// logSale → save merch after sale
+const _origLogSale = logSale;
+window.logSale = function(id) {
+  const it = merch.find(i => i.id === id);
+  if (!it) return;
+  const qtyStr = prompt(`Log a sale for "${it.name}"\nCurrently in stock: ${it.qty}\n\nHow many units sold?`, '1');
+  if (qtyStr === null) return;
+  const qty = parseInt(qtyStr);
+  if (isNaN(qty) || qty <= 0) { alert('Please enter a valid number greater than 0.'); return; }
+  if (qty > it.qty) { alert(`Only ${it.qty} unit${it.qty !== 1 ? 's' : ''} in stock.`); return; }
+  it.qty -= qty;
+  it.sold += qty;
+  renderMerch();
+  if (document.getElementById('tab-lead').classList.contains('active')) renderLead();
+  alert(`Sale logged!\n${qty} × ${it.name} = $${(qty * it.price).toFixed(2)}\n\nStock updated: ${it.qty} remaining.`);
+  saveMerch();
+};
+
+// saveNewMerch → save after add
+const _saveNewMerch = saveNewMerch;
+window.saveNewMerch = function() { _saveNewMerch(); saveMerch(); };
+
+// delMerch → save after delete
+const _delMerch = delMerch;
+window.delMerch = function(id) {
+  if (confirm('Remove this item?')) { merch = merch.filter(i => i.id !== id); renderMerch(); saveMerch(); }
+};
+
+// updCost / updSold → save financials
+const _updCost = updCost;
+window.updCost = function(id, v) { _updCost(id, v); saveMerch(); };
+const _updSold = updSold;
+window.updSold = function(id, v) { _updSold(id, v); saveMerch(); };
+
+// Staff mutations
+const _toggleStaff = toggleStaff;
+window.toggleStaff = function(q, id) { _toggleStaff(q, id); saveStaff(); };
+const _delStaff = delStaff;
+window.delStaff = function(q, id) { if(staff[q]) staff[q] = staff[q].filter(e => e.id !== id); renderStaff(); saveStaff(); };
+const _addStaff = addStaff;
+window.addStaff = function() { _addStaff(); saveStaff(); };
+
+// Vol mutations
+const _toggleVol = toggleVol;
+window.toggleVol = function(id) { _toggleVol(id); saveVolunteers(); };
+const _delVol = delVol;
+window.delVol = function(id) { volunteers = volunteers.filter(v => v.id !== id); renderVol(); saveVolunteers(); };
+const _addVol = addVol;
+window.addVol = function() { _addVol(); saveVolunteers(); };
+
+// saveCount → also save counts to Sheets
+const _saveCount = saveCount;
+window.saveCount = function() { _saveCount(); saveCounts(); };
+const _deleteCount = deleteCount;
+window.deleteCount = function(id) {
+  if (confirm('Delete this count entry?')) {
+    counts = counts.filter(c => c.id !== id);
+    renderCountStats();
+    renderCountLog();
+    saveCounts();
+  }
+};
+
+// Manual sync button
+window.manualSync = async function() {
+  setSyncStatus('loading', 'Refreshing from Google Sheets…');
+  await loadFromSheets();
+};
+
+// ── INIT ──────────────────────────────────────────────
+function initRender() {
+  renderMerch();
+  renderStaff();
+  renderVol();
+  renderShirtFinancials();
+}
+
+loadFromSheets(); // kicks off async load then calls initRender
+</script>
+</body>
+</html>
